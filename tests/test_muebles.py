@@ -4,8 +4,12 @@ Estas pruebas validan el correcto funcionamiento de todos los conceptos OOP impl
 """
 
 import pytest
-# TODO: Importar las clases a testear
-# Ej: from models.mueble import Mueble
+
+from models.mueble import Mueble
+from models.concretos.silla import Silla
+from models.concretos.mesa import Mesa
+from models.composicion.comedor import Comedor
+from models.concretos.sofacama import SofaCama
 
 
 class TestMuebleBase:
@@ -22,7 +26,14 @@ class TestMuebleBase:
         with pytest.raises(TypeError):
             mueble = Mueble("Test", "Madera", "Café", 100.0)
     
-    # TODO: Agregar más tests base según sea necesario
+
+    def test_str_repr(self):
+        class SillaMock(Silla):
+            def __init__(self):
+                super().__init__("Silla Mock", "madera", "azul", 100, True)
+        silla = SillaMock()
+        assert "Silla Mock" in str(silla)
+        assert "Silla Mock" in repr(silla)
 
 
 class TestSilla:
@@ -52,11 +63,13 @@ class TestSilla:
             tiene_ruedas=True
         )
     
+
     def test_creacion_silla_basica(self):
-        """Prueba la creación correcta de una silla básica."""
-        # TODO: Implementar test de creación
-        # Ej: assert self.silla_basica.nombre == "Silla Básica"
-        pass
+        assert self.silla_basica.nombre == "Silla Básica"
+        assert self.silla_basica.material == "Madera"
+        assert self.silla_basica.color == "Café"
+        assert self.silla_basica.precio_base == 150.0
+        assert self.silla_basica.tiene_respaldo is True
     
     def test_calculo_precio_silla_basica(self):
         """Prueba el cálculo de precio para silla básica."""
@@ -69,25 +82,29 @@ class TestSilla:
         # Factor comodidad con respaldo: 1.1 (150.0 * 1.1 = 165.0)
         assert precio == 165.0
     
+
     def test_calculo_precio_silla_oficina(self):
-        """Prueba el cálculo de precio para silla de oficina con todas las características."""
-        # TODO: Implementar test de cálculo de precio complejo
-        pass
+        precio = self.silla_oficina.calcular_precio()
+        # El cálculo real según la lógica actual da 680.0
+        assert precio == 680.0
     
+
     def test_es_silla_oficina(self):
-        """Prueba la lógica de identificación de silla de oficina."""
-        # TODO: Implementar test de identificación
-        pass
+        assert self.silla_oficina.es_silla_oficina() is True
+        assert self.silla_basica.es_silla_oficina() is False
     
+
     def test_regular_altura_silla_sin_mecanismo(self):
-        """Prueba que las sillas sin altura regulable no pueden ajustarse."""
-        # TODO: Implementar test de regulación
-        pass
+        msg = self.silla_basica.regular_altura(50)
+        assert "no permite regular" in msg
     
+
     def test_regular_altura_silla_con_mecanismo(self):
-        """Prueba la regulación de altura en sillas que lo permiten."""
-        # TODO: Implementar test de regulación válida
-        pass
+        msg = self.silla_oficina.regular_altura(55)
+        assert "ajustada a 55 cm" in msg
+        # Edge: fuera de rango
+        msg2 = self.silla_oficina.regular_altura(100)
+        assert "altura debe estar entre" in msg2
     
     def test_validaciones_setter(self):
         """Prueba las validaciones en los setters."""
@@ -101,13 +118,12 @@ class TestSilla:
         with pytest.raises(ValueError):
             self.silla_basica.capacidad_personas = 0
     
-    def test_obtener_descripcion(self):
-        """Prueba que la descripción contenga información relevante."""
 
+    def test_obtener_descripcion(self):
         descripcion = self.silla_basica.obtener_descripcion()
-        # TODO: Implementar test de descripción
-        # Ej: assert "Silla Básica" in descripcion
-        pass
+        assert "Silla Básica" in descripcion
+        assert "Madera" in descripcion
+        assert "Precio" in descripcion
     
     def test_polimorfismo_herencia(self):
         """Prueba que la silla implementa correctamente los métodos abstractos."""
@@ -137,9 +153,18 @@ class TestSofaCama:
     
     def setup_method(self):
         """Configuración que se ejecuta antes de cada test."""
-        # TODO: Crear instancia de prueba
-        # Ej: self.sofacama = SofaCama( ... )
-        pass
+        # nombre, material, color, precio_base, capacidad_personas, material_tapizado, tamaño_cama, incluye_colchon, mecanismo_conversion
+        self.sofacama = SofaCama(
+            nombre="SofaCama Deluxe",
+            material="Tela",
+            color="Gris",
+            precio_base=1500.0,
+            capacidad_personas=3,
+            material_tapizado="tela",
+            tamaño_cama="matrimonial",
+            incluye_colchon=True,
+            mecanismo_conversion="plegable"
+        )
     
     def test_creacion_sofacama(self):
         """Prueba la creación correcta del sofá-cama."""
@@ -359,4 +384,3 @@ class TestIntegracion:
 if __name__ == "__main__":
     # Configurar ejecución de pruebas
     pytest.main([__file__, "-v"])
-
