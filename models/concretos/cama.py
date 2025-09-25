@@ -6,10 +6,19 @@ from models.mueble import Mueble
 class Cama(Mueble):
     
     def __init__(self, nombre: str, material: str, color: str, precio_base: float,
-                 tamaño: str = "matrimonial", incluye_colchon: bool = True):
+                 tamaño: str = "matrimonial", incluye_colchon: bool = True, tiene_cabecera: bool = True):
         super().__init__(nombre, material, color, precio_base)
         self._tamaño = tamaño
         self._incluye_colchon = incluye_colchon
+        self._tiene_cabecera = tiene_cabecera
+    @property
+    def tiene_cabecera(self) -> bool:
+        """Indica si la cama tiene cabecera."""
+        return self._tiene_cabecera
+
+    @tiene_cabecera.setter
+    def tiene_cabecera(self, value: bool) -> None:
+        self._tiene_cabecera = bool(value)
 
     @property
     def tamaño(self) -> str:
@@ -48,6 +57,8 @@ class Cama(Mueble):
             precio += 100
         if self.incluye_colchon:
             precio += 350
+        if self.tiene_cabecera:
+            precio += 120
         return round(precio, 2)
 
     def obtener_descripcion(self) -> str:
@@ -57,6 +68,7 @@ class Cama(Mueble):
         descripcion = f"Cama {self.nombre} fabricada en {self.material} color {self.color}."
         descripcion += f"\nTamaño: {self.tamaño}"
         descripcion += f"\nColchón incluido: {'Sí' if self.incluye_colchon else 'No'}"
+        descripcion += f"\nCabecera: {'Sí' if self.tiene_cabecera else 'No'}"
         descripcion += f"\nPrecio: ${self.calcular_precio():.2f}"
         return descripcion
 

@@ -6,11 +6,34 @@ from models.categorias.superficies import Superficie
 class Escritorio(Superficie):
     
     def __init__(self, nombre: str, material: str, color: str, precio_base: float,
-                 area: float, forma: str = "rectangular", altura: float = 75,
-                 tiene_cajones: bool = False, cantidad_cajones: int = 0):
-        super().__init__(nombre, material, color, precio_base, area, forma, altura)
+                 forma: str = "rectangular", area_superficie: float = 1.5, altura: float = 75,
+                 tiene_cajones: bool = False, num_cajones: int = 0, cantidad_cajones: int = None, tiene_iluminacion: bool = False):
+        super().__init__(nombre, material, color, precio_base, forma, area_superficie)
+        self._altura = altura
         self._tiene_cajones = tiene_cajones
-        self._cantidad_cajones = cantidad_cajones if tiene_cajones else 0
+        # Permitir ambos nombres de argumento para compatibilidad
+        if cantidad_cajones is not None:
+            self._cantidad_cajones = cantidad_cajones if tiene_cajones else 0
+        else:
+            self._cantidad_cajones = num_cajones if tiene_cajones else 0
+        self._tiene_iluminacion = tiene_iluminacion
+    @property
+    def altura(self) -> float:
+        return self._altura
+
+    @altura.setter
+    def altura(self, value: float) -> None:
+        if value <= 0:
+            raise ValueError("La altura debe ser mayor a 0")
+        self._altura = value
+    @property
+    def tiene_iluminacion(self) -> bool:
+        """Indica si el escritorio tiene iluminación incorporada."""
+        return self._tiene_iluminacion
+
+    @tiene_iluminacion.setter
+    def tiene_iluminacion(self, value: bool) -> None:
+        self._tiene_iluminacion = bool(value)
 
     @property
     def tiene_cajones(self) -> bool:
@@ -42,11 +65,13 @@ class Escritorio(Superficie):
         Calcula el precio del escritorio según sus características.
         """
         precio = self.precio_base
-        precio += self.area * 120  # escritorio suele ser más caro por m2
+        precio += self.area_superficie * 120  # escritorio suele ser más caro por m2
         if self.forma.lower() == "esquinero":
             precio += 200
         if self.tiene_cajones:
             precio += 80 * self.cantidad_cajones
+        if self.tiene_iluminacion:
+            precio += 150
         if self.altura > 80:
             precio += 40
         return round(precio, 2)
@@ -60,6 +85,7 @@ class Escritorio(Superficie):
         descripcion += f"\nCajones: {'Sí' if self.tiene_cajones else 'No'}"
         if self.tiene_cajones:
             descripcion += f", Cantidad: {self.cantidad_cajones}"
+        descripcion += f"\nIluminación incorporada: {'Sí' if self.tiene_iluminacion else 'No'}"
         descripcion += f"\nPrecio: ${self.calcular_precio():.2f}"
         return descripcion
 
