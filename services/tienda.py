@@ -4,20 +4,20 @@ Esta clase implementa el patrón de servicio para separar la lógica de negocio 
 """
 
 from typing import List, Dict, Optional, Union
-from ..models.mueble import Mueble
-from ..models.composicion.comedor import Comedor
-from ..models.concretos.silla import Silla
-from ..models.concretos.sillon import Sillon
-from ..models.concretos.sofa import Sofa
-from ..models.concretos.sofacama import SofaCama
-from ..models.concretos.mesa import Mesa
-from ..models.concretos.escritorio import Escritorio
-from ..models.concretos.cama import Cama
-from ..models.concretos.armario import Armario
-from ..models.concretos.cajonera import Cajonera
-from ..models.categorias.almacenamiento import Almacenamiento
-from ..models.categorias.asientos import Asiento
-from ..models.categorias.superficies import Superficie
+from models.mueble import Mueble
+from models.composicion.comedor import Comedor
+from models.concretos.silla import Silla
+from models.concretos.sillon import Sillon
+from models.concretos.sofa import Sofa
+from models.concretos.sofacama import SofaCama
+from models.concretos.mesa import Mesa
+from models.concretos.escritorio import Escritorio
+from models.concretos.cama import Cama
+from models.concretos.armario import Armario
+from models.concretos.cajonera import Cajonera
+from models.categorias.almacenamiento import Almacenamiento
+from models.categorias.asientos import Asiento
+from models.categorias.superficies import Superficie
 
 
 class TiendaMuebles:
