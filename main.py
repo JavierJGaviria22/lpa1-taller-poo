@@ -93,7 +93,7 @@ def crear_catalogo_inicial(tienda: 'TiendaMuebles') -> None:
             tiene_respaldo=True,
             material_tapizado="cuero",
             es_reclinable=True,
-            tiene_reposapiés=True
+            tiene_reposapies=True
         ),
         Sofa(
             nombre="Sofá Modular de 3 Plazas",
